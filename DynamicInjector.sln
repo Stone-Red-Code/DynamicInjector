@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicInjector", "DynamicInjector\DynamicInjector.csproj", "{B5C9B128-72FD-4278-AC8F-24B948F00679}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicInjector-Test", "DynamicInjector-Test\DynamicInjector-Test.csproj", "{E5415270-33A1-4BB7-8BC5-04E036461F36}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B5C9B128-72FD-4278-AC8F-24B948F00679}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5C9B128-72FD-4278-AC8F-24B948F00679}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5C9B128-72FD-4278-AC8F-24B948F00679}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5C9B128-72FD-4278-AC8F-24B948F00679}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5415270-33A1-4BB7-8BC5-04E036461F36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5415270-33A1-4BB7-8BC5-04E036461F36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5415270-33A1-4BB7-8BC5-04E036461F36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5415270-33A1-4BB7-8BC5-04E036461F36}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EBB4F955-9160-48BC-B0EE-B9156D360682}
+	EndGlobalSection
+EndGlobal
