@@ -4,22 +4,44 @@ using System.Reflection;
 
 namespace DynamicInjector
 {
+    /// <summary>
+    /// Container which handles all registered services
+    /// </summary>
     public class InjectionContainer : IContainer
     {
         private readonly Dictionary<string, object> globalServices = new Dictionary<string, object>();
         private readonly Dictionary<string, Type> localServices = new Dictionary<string, Type>();
         private readonly Dictionary<string, Type> scopedServices = new Dictionary<string, Type>();
 
+        /// <summary>
+        /// Registers a global service
+        /// </summary>
+        /// <typeparam name="TService"></typeparam>
+        /// <param name="name"></param>
         public void RegisterGlobal<TService>(string? name = null)
         {
             globalServices.Add(name ?? typeof(TService).FullName, Resolve<TService>()!);
         }
 
+        /// <summary>
+        /// Registers a global service
+        /// </summary>
+        /// <typeparam name="TService"></typeparam>
+        /// <typeparam name="TImplementation"></typeparam>
+        /// <param name="name"></param>
         public void RegisterGlobal<TService, TImplementation>(string? name = null) where TImplementation : TService
         {
             globalServices.Add(name ?? typeof(TService).FullName, Resolve<TImplementation>()!);
         }
 
+        /// <summary>
+        /// Registers a global service
+        /// </summary>
+        /// <typeparam name="TService"></typeparam>
+        /// <typeparam name="TImplementation"></typeparam>
+        /// <param name="implementation"></param>
+        /// <param name="name"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public void RegisterGlobal<TService, TImplementation>(TImplementation implementation, string? name = null) where TImplementation : TService
         {
             if (implementation is null)
@@ -30,36 +52,64 @@ namespace DynamicInjector
             globalServices.Add(name ?? typeof(TService).FullName, implementation);
         }
 
+        /// <summary>
+        /// Registers a local service
+        /// </summary>
+        /// <typeparam name="TService"></typeparam>
+        /// <param name="name"></param>
         public void RegisterLocal<TService>(string? name = null)
         {
             localServices.Add(name ?? typeof(TService).FullName, typeof(TService));
         }
 
+        /// <summary>
+        /// Registers a local service
+        /// </summary>
+        /// <typeparam name="TService"></typeparam>
+        /// <typeparam name="TImplementation"></typeparam>
+        /// <param name="name"></param>
         public void RegisterLocal<TService, TImplementation>(string? name = null) where TImplementation : TService
         {
             localServices.Add(name ?? typeof(TService).FullName, typeof(TImplementation));
         }
 
+        /// <summary>
+        /// Registers a scoped service
+        /// </summary>
+        /// <typeparam name="TService"></typeparam>
+        /// <param name="name"></param>
         public void RegisterScoped<TService>(string? name = null)
         {
             scopedServices.Add(name ?? typeof(TService).FullName, typeof(TService));
         }
 
+        /// <summary>
+        /// Registers a scoped service
+        /// </summary>
+        /// <typeparam name="TService"></typeparam>
+        /// <typeparam name="TImplementation"></typeparam>
+        /// <param name="name"></param>
         public void RegisterScoped<TService, TImplementation>(string? name = null) where TImplementation : TService
         {
             scopedServices.Add(name ?? typeof(TService).FullName, typeof(TImplementation));
         }
 
+        /// <summary>
+        /// Begins a new scope
+        /// </summary>
+        /// <returns>A new scope</returns>
         public LifetimeScope BeginScope()
         {
             return new LifetimeScope(this);
         }
 
+        /// <inheritdoc cref="IContainer.Resolve{T}"/>
         public T Resolve<T>()
         {
             return (T)Resolve(typeof(T));
         }
 
+        /// <inheritdoc cref="IContainer.Resolve(Type)"/>
         public object Resolve(Type type)
         {
             return InternalResolve(type, null);
@@ -76,7 +126,7 @@ namespace DynamicInjector
 
             if (constructorInfos.Length > 1)
             {
-                throw new InvalidOperationException($"Service \"{type.FullName}\" contains multiple constructors!");
+                throw new InvalidOperationException($"Service \"{type.FullName}\" cannot contain multiple constructors!");
             }
 
             ConstructorInfo constructorInfo = constructorInfos[0];
@@ -132,6 +182,7 @@ namespace DynamicInjector
             return instance;
         }
 
+        /// <inheritdoc cref="IContainer.Invoke{TInstance}(TInstance, Func{TInstance, Delegate})"/>
         public object Invoke<TInstance>(TInstance instance, Func<TInstance, Delegate> method)
         {
             return InternalInvoke(instance, method, null);
@@ -162,7 +213,7 @@ namespace DynamicInjector
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Service \"{parameterInfo.ParameterType.FullName}\" not found!");
+                    throw new InvalidOperationException($"Cannot find service \"{parameterInfo.ParameterType.FullName}\"!");
                 }
             }
 

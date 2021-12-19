@@ -17,8 +17,8 @@ internal class Prgramm
             int res = scope.Invoke<TestClass, int, SecondTestService>(testClass, (i) => i.SecondTest);
 
             Console.WriteLine(res);
-            scope.Invoke<TestClass>(testClass, (i) => i.SecondTest);
-            scope.Invoke<TestClass>(testClass, (i) => i.SecondTest);
+            scope.Invoke(testClass, (i) => i.SecondTest);
+            scope.Invoke(testClass, (i) => i.SecondTest);
         }
 
         Console.WriteLine();
