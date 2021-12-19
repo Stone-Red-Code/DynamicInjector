@@ -4,79 +4,79 @@ namespace DynamicInjector
 {
     public static class MethodInjectionContainerExtensions
     {
-        public static void Invoke<TService>(this InjectionContainer injectionContainer, Func<TService, Delegate> method)
+        public static void Invoke<T>(this IContainer injectionContainer, Func<T, Delegate> method)
         {
-            injectionContainer.Invoke(injectionContainer.Resolve<TService>(), method);
+            injectionContainer.Invoke(injectionContainer.Resolve<T>(), method);
         }
 
-        public static TReturn Invoke<TInstance, TReturn>(this InjectionContainer injectionContainer, TInstance instance, Func<TInstance, Func<TReturn>> method)
+        public static TResult Invoke<T, TResult>(this IContainer injectionContainer, T instance, Func<T, Func<TResult>> method)
         {
-            return (TReturn)injectionContainer.Invoke(instance, method);
+            return (TResult)injectionContainer.Invoke(instance, method);
         }
 
-        public static TReturn Invoke<TInstance, TReturn, T1>(this InjectionContainer injectionContainer, TInstance instance, Func<TInstance, Func<T1, TReturn>> method)
+        public static TResult Invoke<T, TResult, T1>(this IContainer injectionContainer, T instance, Func<T, Func<T1, TResult>> method)
         {
-            return (TReturn)injectionContainer.Invoke(instance, method);
+            return (TResult)injectionContainer.Invoke(instance, method);
         }
 
-        public static TReturn Invoke<TInstance, TReturn, T1, T2>(this InjectionContainer injectionContainer, TInstance instance, Func<TInstance, Func<T1, T2, TReturn>> method)
+        public static TResult Invoke<T, TResult, T1, T2>(this IContainer injectionContainer, T instance, Func<T, Func<T1, T2, TResult>> method)
         {
-            return (TReturn)injectionContainer.Invoke(instance, method);
+            return (TResult)injectionContainer.Invoke(instance, method);
         }
 
-        public static TReturn Invoke<TInstance, TReturn, T1, T2, T3>(this InjectionContainer injectionContainer, TInstance instance, Func<TInstance, Func<T1, T2, T3, TReturn>> method)
+        public static TResult Invoke<T, TResult, T1, T2, T3>(this IContainer injectionContainer, T instance, Func<T, Func<T1, T2, T3, TResult>> method)
         {
-            return (TReturn)injectionContainer.Invoke(instance, method);
+            return (TResult)injectionContainer.Invoke(instance, method);
         }
 
-        public static TReturn Invoke<TInstance, TReturn, T1, T2, T3, T4>(this InjectionContainer injectionContainer, TInstance instance, Func<TInstance, Func<T1, T2, T3, T4, TReturn>> method)
+        public static TResult Invoke<T, TResult, T1, T2, T3, T4>(this IContainer injectionContainer, T instance, Func<T, Func<T1, T2, T3, T4, TResult>> method)
         {
-            return (TReturn)injectionContainer.Invoke(instance, method);
+            return (TResult)injectionContainer.Invoke(instance, method);
         }
 
-        public static TReturn Invoke<TInstance, TReturn, T1, T2, T3, T4, T5>(this InjectionContainer injectionContainer, TInstance instance, Func<TInstance, Func<T1, T2, T3, T4, T5, TReturn>> method)
+        public static TResult Invoke<T, TResult, T1, T2, T3, T4, T5>(this IContainer injectionContainer, T instance, Func<T, Func<T1, T2, T3, T4, T5, TResult>> method)
         {
-            return (TReturn)injectionContainer.Invoke(instance, method);
+            return (TResult)injectionContainer.Invoke(instance, method);
         }
 
-        public static TReturn Invoke<TInstance, TReturn, T1, T2, T3, T4, T5, T6>(this InjectionContainer injectionContainer, TInstance instance, Func<TInstance, Func<T1, T2, T3, T4, T5, T6, TReturn>> method)
+        public static TResult Invoke<T, TResult, T1, T2, T3, T4, T5, T6>(this IContainer injectionContainer, T instance, Func<T, Func<T1, T2, T3, T4, T5, T6, TResult>> method)
         {
-            return (TReturn)injectionContainer.Invoke(instance, method);
+            return (TResult)injectionContainer.Invoke(instance, method);
         }
 
-        public static TReturn Invoke<TService, TReturn>(this InjectionContainer injectionContainer, Func<TService, Func<TReturn>> method)
+        public static TResult Invoke<T, TResult>(this IContainer injectionContainer, Func<T, Func<TResult>> method)
         {
-            return (TReturn)injectionContainer.Invoke(injectionContainer.Resolve<TService>(), method);
+            return (TResult)injectionContainer.Invoke(injectionContainer.Resolve<T>(), method);
         }
 
-        public static TReturn Invoke<TService, TReturn, T1>(this InjectionContainer injectionContainer, Func<TService, Func<T1, TReturn>> method)
+        public static TResult Invoke<T, TResult, T1>(this IContainer injectionContainer, Func<T, Func<T1, TResult>> method)
         {
-            return (TReturn)injectionContainer.Invoke(injectionContainer.Resolve<TService>(), method);
+            return (TResult)injectionContainer.Invoke(injectionContainer.Resolve<T>(), method);
         }
 
-        public static TReturn Invoke<TService, TReturn, T1, T2>(this InjectionContainer injectionContainer, Func<TService, Func<T1, T2, TReturn>> method)
+        public static TResult Invoke<T, TResult, T1, T2>(this IContainer injectionContainer, Func<T, Func<T1, T2, TResult>> method)
         {
-            return (TReturn)injectionContainer.Invoke(injectionContainer.Resolve<TService>(), method);
+            return (TResult)injectionContainer.Invoke(injectionContainer.Resolve<T>(), method);
         }
 
-        public static TReturn Invoke<TService, TReturn, T1, T2, T3>(this InjectionContainer injectionContainer, Func<TService, Func<T1, T2, T3, TReturn>> method)
+        public static TResult Invoke<T, TResult, T1, T2, T3>(this IContainer injectionContainer, Func<T, Func<T1, T2, T3, TResult>> method)
         {
-            return (TReturn)injectionContainer.Invoke(injectionContainer.Resolve<TService>(), method);
+            return (TResult)injectionContainer.Invoke(injectionContainer.Resolve<T>(), method);
         }
 
-        public static TReturn Invoke<TService, TReturn, T1, T2, T3, T4>(this InjectionContainer injectionContainer, Func<TService, Func<T1, T2, T3, T4, TReturn>> method)
+        public static TResult Invoke<T, TResult, T1, T2, T3, T4>(this IContainer injectionContainer, Func<T, Func<T1, T2, T3, T4, TResult>> method)
         {
-            return (TReturn)injectionContainer.Invoke(injectionContainer.Resolve<TService>(), method);
+            return (TResult)injectionContainer.Invoke(injectionContainer.Resolve<T>(), method);
         }
 
-        public static TReturn Invoke<TService, TReturn, T1, T2, T3, T4, T5>(this InjectionContainer injectionContainer, Func<TService, Func<T1, T2, T3, T4, T5, TReturn>> method)
+        public static TResult Invoke<T, TResult, T1, T2, T3, T4, T5>(this IContainer injectionContainer, Func<T, Func<T1, T2, T3, T4, T5, TResult>> method)
         {
-            return (TReturn)injectionContainer.Invoke(injectionContainer.Resolve<TService>(), method);
+            return (TResult)injectionContainer.Invoke(injectionContainer.Resolve<T>(), method);
         }
 
-        public static TReturn Invoke<TService, TReturn, T1, T2, T3, T4, T5, T6>(this InjectionContainer injectionContainer, Func<TService, Func<T1, T2, T3, T4, T5, T6, TReturn>> method)
+        public static TResult Invoke<T, TResult, T1, T2, T3, T4, T5, T6>(this IContainer injectionContainer, Func<T, Func<T1, T2, T3, T4, T5, T6, TResult>> method)
         {
-            return (TReturn)injectionContainer.Invoke(injectionContainer.Resolve<TService>(), method);
+            return (TResult)injectionContainer.Invoke(injectionContainer.Resolve<T>(), method);
         }
     }
 }

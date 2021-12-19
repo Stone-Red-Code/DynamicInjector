@@ -6,14 +6,29 @@ internal class Prgramm
 {
     private static void Main()
     {
-        InjectionContainer injector = new InjectionContainer();
-        injector.RegisterGlobal<IFirstTestService, FirstTestService>();
-        injector.RegisterLocal<SecondTestService>();
+        InjectionContainer container = new InjectionContainer();
+        container.RegisterScoped<IFirstTestService, FirstTestService>();
+        container.RegisterLocal<SecondTestService>();
 
-        TestClass? testClass = injector.Resolve<TestClass>();
+        using (LifetimeScope scope = container.BeginScope())
+        {
+            TestClass? testClass = scope.Resolve<TestClass>();
+            testClass.Test();
+            int res = scope.Invoke<TestClass, int, SecondTestService>(testClass, (i) => i.SecondTest);
 
-        testClass.Test();
+            Console.WriteLine(res);
+            scope.Invoke<TestClass>(testClass, (i) => i.SecondTest);
+            scope.Invoke<TestClass>(testClass, (i) => i.SecondTest);
+        }
 
-        injector.Invoke<TestClass>(testClass, (c) => c.Test);
+        Console.WriteLine();
+
+        using (LifetimeScope scope = container.BeginScope())
+        {
+            scope.Resolve<TestClass>().Test();
+            scope.Resolve<TestClass>().Test();
+            scope.Resolve<TestClass>().Test();
+            scope.Resolve<TestClass>().Test();
+        }
     }
 }

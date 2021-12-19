@@ -16,7 +16,6 @@ internal class TestClass
 
     public void Test()
     {
-        testService.Print();
         SecondTestService?.Output();
     }
 

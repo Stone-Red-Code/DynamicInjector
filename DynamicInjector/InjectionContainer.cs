@@ -4,10 +4,11 @@ using System.Reflection;
 
 namespace DynamicInjector
 {
-    public class InjectionContainer
+    public class InjectionContainer : IContainer
     {
         private readonly Dictionary<string, object> globalServices = new Dictionary<string, object>();
         private readonly Dictionary<string, Type> localServices = new Dictionary<string, Type>();
+        private readonly Dictionary<string, Type> scopedServices = new Dictionary<string, Type>();
 
         public void RegisterGlobal<TService>(string? name = null)
         {
@@ -36,7 +37,22 @@ namespace DynamicInjector
 
         public void RegisterLocal<TService, TImplementation>(string? name = null) where TImplementation : TService
         {
-            localServices.Add(name ?? typeof(TService).FullName, typeof(TService));
+            localServices.Add(name ?? typeof(TService).FullName, typeof(TImplementation));
+        }
+
+        public void RegisterScoped<TService>(string? name = null)
+        {
+            scopedServices.Add(name ?? typeof(TService).FullName, typeof(TService));
+        }
+
+        public void RegisterScoped<TService, TImplementation>(string? name = null) where TImplementation : TService
+        {
+            scopedServices.Add(name ?? typeof(TService).FullName, typeof(TImplementation));
+        }
+
+        public LifetimeScope BeginScope()
+        {
+            return new LifetimeScope(this);
         }
 
         public T Resolve<T>()
@@ -45,6 +61,11 @@ namespace DynamicInjector
         }
 
         public object Resolve(Type type)
+        {
+            return InternalResolve(type, null);
+        }
+
+        internal object InternalResolve(Type type, LifetimeScope? scope)
         {
             ConstructorInfo[]? constructorInfos = type.GetConstructors();
 
@@ -71,11 +92,11 @@ namespace DynamicInjector
 
             foreach (ParameterInfo parameterInfo in parameterInfos)
             {
-                if (CheckIfServiceExists(parameterInfo.Name, out object? serviceInstance))
+                if (CheckIfServiceExists(parameterInfo.Name, scope, out object? serviceInstance))
                 {
                     arguments.Add(serviceInstance!);
                 }
-                else if (CheckIfServiceExists(parameterInfo.ParameterType.FullName, out serviceInstance))
+                else if (CheckIfServiceExists(parameterInfo.ParameterType.FullName, scope, out serviceInstance))
                 {
                     arguments.Add(serviceInstance!);
                 }
@@ -94,11 +115,11 @@ namespace DynamicInjector
                     continue;
                 }
 
-                if (CheckIfServiceExists(propertyInfo.Name, out object? serviceInstance))
+                if (CheckIfServiceExists(propertyInfo.Name, scope, out object? serviceInstance))
                 {
                     propertyInfo.SetValue(instance, serviceInstance);
                 }
-                else if (CheckIfServiceExists(propertyInfo.PropertyType.FullName, out serviceInstance))
+                else if (CheckIfServiceExists(propertyInfo.PropertyType.FullName, scope, out serviceInstance))
                 {
                     propertyInfo.SetValue(instance, serviceInstance);
                 }
@@ -113,6 +134,11 @@ namespace DynamicInjector
 
         public object Invoke<TInstance>(TInstance instance, Func<TInstance, Delegate> method)
         {
+            return InternalInvoke(instance, method, null);
+        }
+
+        internal object InternalInvoke<TInstance>(TInstance instance, Func<TInstance, Delegate> method, LifetimeScope? scope)
+        {
             Delegate delegateMethod = method.Invoke(instance);
             MethodInfo methodInfo = delegateMethod.Method;
             ParameterInfo[] parameterInfos = methodInfo.GetParameters();
@@ -126,11 +152,11 @@ namespace DynamicInjector
 
             foreach (ParameterInfo parameterInfo in parameterInfos)
             {
-                if (CheckIfServiceExists(parameterInfo.Name, out object? serviceInstance))
+                if (CheckIfServiceExists(parameterInfo.Name, scope, out object? serviceInstance))
                 {
                     arguments.Add(serviceInstance!);
                 }
-                else if (CheckIfServiceExists(parameterInfo.ParameterType.FullName, out serviceInstance))
+                else if (CheckIfServiceExists(parameterInfo.ParameterType.FullName, scope, out serviceInstance))
                 {
                     arguments.Add(serviceInstance!);
                 }
@@ -143,8 +169,17 @@ namespace DynamicInjector
             return delegateMethod.DynamicInvoke(arguments.ToArray());
         }
 
-        private bool CheckIfServiceExists(string typeName, out object? serviceInstance)
+        private bool CheckIfServiceExists(string typeName, LifetimeScope? scope, out object? serviceInstance)
         {
+            foreach (KeyValuePair<string, Type> serviceType in localServices)
+            {
+                if (typeName == serviceType.Key)
+                {
+                    serviceInstance = InternalResolve(localServices[serviceType.Key], scope);
+                    return true;
+                }
+            }
+
             foreach (KeyValuePair<string, object> serviceType in globalServices)
             {
                 if (typeName == serviceType.Key)
@@ -154,11 +189,25 @@ namespace DynamicInjector
                 }
             }
 
-            foreach (KeyValuePair<string, Type> serviceType in localServices)
+            if (scope is null)
+            {
+                serviceInstance = null;
+                return false;
+            }
+
+            foreach (KeyValuePair<string, Type> serviceType in scopedServices)
             {
                 if (typeName == serviceType.Key)
                 {
-                    serviceInstance = Resolve(localServices[serviceType.Key]);
+                    if (scope.Services.ContainsKey(serviceType.Key))
+                    {
+                        serviceInstance = scope.Services[serviceType.Key];
+                    }
+                    else
+                    {
+                        serviceInstance = InternalResolve(scopedServices[serviceType.Key], scope);
+                        scope.Services.Add(serviceType.Key, serviceInstance);
+                    }
                     return true;
                 }
             }
