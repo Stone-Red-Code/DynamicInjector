@@ -9,6 +9,7 @@ internal class Prgramm
         InjectionContainer container = new InjectionContainer();
         container.RegisterScoped<IFirstTestService, FirstTestService>();
         container.RegisterLocal<SecondTestService>();
+        container.RegisterGlobal<IFirstTestService, FirstTestService>();
 
         using (LifetimeScope scope = container.BeginScope())
         {

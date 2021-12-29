@@ -36,7 +36,7 @@ namespace DynamicInjector
         }
 
         /// <summary>
-        /// Disposes all disposable scoped services
+        /// Disposes all scoped disposable services
         /// </summary>
         public void Dispose()
         {
